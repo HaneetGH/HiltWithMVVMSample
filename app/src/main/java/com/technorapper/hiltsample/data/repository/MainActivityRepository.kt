@@ -39,36 +39,37 @@ class MainActivityRepository @Inject constructor(
         return userPreferences.name
     }
 
-    suspend fun apiHit() {
+    suspend fun queryData(): Flow<DataState<List<LaunchDetailsQuery.Post>?>> = flow {
         // in your coroutine scope, call `ApolloClient.query(...).toDeferred().await()`
         //   emit(DataState.Loading)
 
-        delay(1000)
+        emit(DataState.Loading)
         val response = try {
 
             apolloClient.query(LaunchDetailsQuery()).toDeferred().await()
         } catch (e: ApolloException) {
             Log.e("fails", e.toString())
             // handle protocol errors
-            return
+            return@flow
         }
 
         val launch = response.data?.posts
         if (launch == null || response.hasErrors()) {
             // handle application errors
-            return
+            return@flow
         }
-
+        emit(DataState.Success(launch))
         // launch now contains a typesafe model of your data
-        println("Launch site: ${launch[0].title}")
+        // println("Launch site: ${launch[0].title}")
 
     }
+
 
     suspend fun getIntentName(): Flow<DataState<Flow<String?>>> = flow {
         emit(DataState.Loading)
         delay(1000)
         val networkBlogs = userPreferences.name
-        apiHit()
+        //apiHit()
         emit(DataState.Success(networkBlogs))
     }
 

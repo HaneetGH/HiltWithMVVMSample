@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.technorapper.hiltsample.LaunchDetailsQuery
 import com.technorapper.hiltsample.base.BaseViewModel
 import com.technorapper.hiltsample.data.repository.MainActivityRepository
 import com.technorapper.hiltsample.domain.DataState
@@ -22,8 +23,14 @@ class MainActivityViewModel @Inject constructor(
 ) : BaseViewModel() {
     val name: MutableLiveData<String> = MutableLiveData()
     private val _dataState: MutableLiveData<DataState<Flow<String?>>> = MutableLiveData()
+
+    private val _dataQueryState: MutableLiveData<DataState<List<LaunchDetailsQuery.Post>?>> = MutableLiveData()
     val dataState: MutableLiveData<DataState<Flow<String?>>>
         get() = _dataState
+
+
+    val dataQueryState: MutableLiveData<DataState<List<LaunchDetailsQuery.Post>?>>
+        get() = _dataQueryState
     fun saveData(s: String, s1: String) {
 
         repository.saveDataInDataStore(s, s1)
@@ -63,6 +70,13 @@ class MainActivityViewModel @Inject constructor(
                         }
                         .launchIn(viewModelScope)
                 }
+                is MainStateEvent.ExecutePostQuery -> {
+                    repository.queryData()
+                        .onEach {dataState ->
+                            _dataQueryState.value = dataState
+                        }
+                        .launchIn(viewModelScope)
+                }
             }
         }
     }
@@ -73,6 +87,7 @@ sealed class MainStateEvent{
     object GetNameEvent: MainStateEvent()
 
     object GetAgeEvent: MainStateEvent()
+    object ExecutePostQuery: MainStateEvent()
 
     object None: MainStateEvent()
 }
