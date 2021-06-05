@@ -1,0 +1,10 @@
+query LaunchDetails {
+    posts {
+        id
+        title
+        description
+        type
+        created_at
+        video_link
+    }
+}

@@ -27,6 +27,7 @@ class MainActivity : BaseClass() {
         viewModel.saveData("Haneet", "28");
 
         viewModel.setStateEvent(MainStateEvent.GetNameEvent)
+        viewModel.setStateEvent(MainStateEvent.GetAgeEvent)
         viewModel.dataState.observe(this, { it ->
             if (it != null) {
 

@@ -55,6 +55,14 @@ class MainActivityViewModel @Inject constructor(
                         }
                         .launchIn(viewModelScope)
                 }
+
+                is MainStateEvent.GetAgeEvent -> {
+                    repository.getIntentAGE()
+                        .onEach {dataState ->
+                            _dataState.value = dataState
+                        }
+                        .launchIn(viewModelScope)
+                }
             }
         }
     }
