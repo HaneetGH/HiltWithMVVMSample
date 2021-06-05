@@ -8,6 +8,8 @@ import androidx.lifecycle.asLiveData
 import com.technorapper.hiltsample.R
 import com.technorapper.hiltsample.base.BaseClass
 import com.technorapper.hiltsample.data.UserPreferences
+import com.technorapper.hiltsample.domain.DataState
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
@@ -24,16 +26,29 @@ class MainActivity : BaseClass() {
 
         viewModel.saveData("Haneet", "28");
 
-            viewModel.getName().asLiveData().observe(this, {
-                if (it != null) {
-                    Log.d("NAME", it)
-                }
-            })
-        viewModel.getAGE().asLiveData().observe(this, {
+        viewModel.setStateEvent(MainStateEvent.GetNameEvent)
+        viewModel.dataState.observe(this, { it ->
             if (it != null) {
-                Log.d("AGE", it)
+
+                when (it) {
+                    is DataState.Success<Flow<String?>> -> {
+                        it.data.asLiveData().observe(this, { final ->
+                            if (final != null) {
+                                Log.d("DATA", final)
+                            }
+                        })
+                    }
+                    is DataState.Error -> {
+                        Log.d("DATA", "ERROR");
+                    }
+                    is DataState.Loading -> {
+                        Log.d("DATA", "LOADING");
+                    }
+                }
             }
+
         })
+
 
         //viewModel.name.observe(this, { Log.d("NAME", it) })
     }
