@@ -43,6 +43,9 @@ android {
         // instruct the compiler to generate Kotlin models
         generateKotlinModels.set(true)
     }
+    dataBinding {
+        enabled true
+    }
 }
 
 dependencies {
@@ -72,7 +75,7 @@ dependencies {
     implementation("com.apollographql.apollo:apollo-coroutines-support:2.5.8")
     def gson = "2.6.0"
     implementation "com.squareup.retrofit2:converter-gson:$gson"
-
+    implementation 'com.google.android.material:material:1.2.1'
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.1")
 
 }
