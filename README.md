@@ -1,3 +1,16 @@
-# HiltWithMVVMSample
+# HiltWithMVVM/MVI Sample
 
-This sample Includes MVVM HILT DATASTORE as per know..
+MVI/MVVM
+GraphQL
+ApolloClinet
+Hilt
+DataStore
+
+
+Pending
+UI
+Caching
+code cleanup
+
+
+
