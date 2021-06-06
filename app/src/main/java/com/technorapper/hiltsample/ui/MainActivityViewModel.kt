@@ -24,13 +24,15 @@ class MainActivityViewModel @Inject constructor(
     val name: MutableLiveData<String> = MutableLiveData()
     private val _dataState: MutableLiveData<DataState<Flow<String?>>> = MutableLiveData()
 
-    private val _dataQueryState: MutableLiveData<DataState<List<LaunchDetailsQuery.Post>?>> = MutableLiveData()
+    private val _dataQueryState: MutableLiveData<DataState<List<LaunchDetailsQuery.Post>?>> =
+        MutableLiveData()
     val dataState: MutableLiveData<DataState<Flow<String?>>>
         get() = _dataState
 
 
     val dataQueryState: MutableLiveData<DataState<List<LaunchDetailsQuery.Post>?>>
         get() = _dataQueryState
+
     fun saveData(s: String, s1: String) {
 
         repository.saveDataInDataStore(s, s1)
@@ -52,12 +54,12 @@ class MainActivityViewModel @Inject constructor(
 //
 //    }
 
-    fun setStateEvent(mainStateEvent: MainStateEvent){
+    fun setStateEvent(mainStateEvent: MainStateEvent) {
         viewModelScope.launch {
-            when(mainStateEvent){
+            when (mainStateEvent) {
                 is MainStateEvent.GetNameEvent -> {
                     repository.getIntentName()
-                        .onEach {dataState ->
+                        .onEach { dataState ->
                             _dataState.value = dataState
                         }
                         .launchIn(viewModelScope)
@@ -65,14 +67,14 @@ class MainActivityViewModel @Inject constructor(
 
                 is MainStateEvent.GetAgeEvent -> {
                     repository.getIntentAGE()
-                        .onEach {dataState ->
+                        .onEach { dataState ->
                             _dataState.value = dataState
                         }
                         .launchIn(viewModelScope)
                 }
                 is MainStateEvent.ExecutePostQuery -> {
-                    repository.queryData()
-                        .onEach {dataState ->
+                    repository.queryData(offset = mainStateEvent.offset)
+                        .onEach { dataState ->
                             _dataQueryState.value = dataState
                         }
                         .launchIn(viewModelScope)
@@ -82,12 +84,12 @@ class MainActivityViewModel @Inject constructor(
     }
 }
 
-sealed class MainStateEvent{
+sealed class MainStateEvent {
 
-    object GetNameEvent: MainStateEvent()
+    object GetNameEvent : MainStateEvent()
 
-    object GetAgeEvent: MainStateEvent()
-    object ExecutePostQuery: MainStateEvent()
+    object GetAgeEvent : MainStateEvent()
+    data class ExecutePostQuery(var offset: Int) : MainStateEvent()
 
-    object None: MainStateEvent()
+    object None : MainStateEvent()
 }

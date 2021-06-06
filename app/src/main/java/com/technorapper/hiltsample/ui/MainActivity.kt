@@ -20,6 +20,7 @@ import javax.inject.Inject
 
 class MainActivity : BaseClass() {
     private val viewModel by viewModels<MainActivityViewModel>()
+    var offset=1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -29,7 +30,7 @@ class MainActivity : BaseClass() {
 
         viewModel.setStateEvent(MainStateEvent.GetNameEvent)
         viewModel.setStateEvent(MainStateEvent.GetAgeEvent)
-        viewModel.setStateEvent(MainStateEvent.ExecutePostQuery)
+        viewModel.setStateEvent(MainStateEvent.ExecutePostQuery(offset))
         viewModel.dataState.observe(this, { it ->
             if (it != null) {
 

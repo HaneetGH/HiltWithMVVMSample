@@ -39,14 +39,14 @@ class MainActivityRepository @Inject constructor(
         return userPreferences.name
     }
 
-    suspend fun queryData(): Flow<DataState<List<LaunchDetailsQuery.Post>?>> = flow {
+    suspend fun queryData(offset:Int): Flow<DataState<List<LaunchDetailsQuery.Post>?>> = flow {
         // in your coroutine scope, call `ApolloClient.query(...).toDeferred().await()`
         //   emit(DataState.Loading)
 
         emit(DataState.Loading)
         val response = try {
 
-            apolloClient.query(LaunchDetailsQuery()).toDeferred().await()
+            apolloClient.query(LaunchDetailsQuery(5,offset)).toDeferred().await()
         } catch (e: ApolloException) {
             Log.e("fails", e.toString())
             // handle protocol errors

@@ -1,10 +1,12 @@
-query LaunchDetails {
-    posts {
+query LaunchDetails($lim:Int!,$off:Int!) {
+    posts(limit: $lim, offset: $off) {
         id
         title
         description
         type
         created_at
         video_link
+
+
     }
 }
