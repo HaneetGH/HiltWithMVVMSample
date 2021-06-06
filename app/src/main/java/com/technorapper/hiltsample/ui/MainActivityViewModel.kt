@@ -36,28 +36,14 @@ class MainActivityViewModel @Inject constructor(
     val dataMutationStateResponse: MutableLiveData<DataState<PostDetailsMutation.Insert_posts_one>>
         get() = _dataMutationStateResponse
 
+
     fun saveData(s: String, s1: String) {
 
         repository.saveDataInDataStore(s, s1)
 
 
     }
-
-//     fun getName(): Flow<String?> {
-//
-//
-//        return repository.getName()
-//
-//    }
-//
-//    fun getAGE() {
-//
-//
-//        return repository.getAge()
-//
-//    }
-
-    fun setStateEvent(mainStateEvent: MainStateEvent) {
+  fun setStateEvent(mainStateEvent: MainStateEvent) {
         viewModelScope.launch {
             when (mainStateEvent) {
                 is MainStateEvent.GetNameEvent -> {
@@ -98,6 +84,8 @@ class MainActivityViewModel @Inject constructor(
         }
     }
 }
+
+
 
 sealed class MainStateEvent {
 

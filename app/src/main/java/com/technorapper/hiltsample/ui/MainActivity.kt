@@ -71,8 +71,9 @@ class MainActivity : BaseClass(), RecyclerViewClickListener {
         }
     }
 
+
     override fun attachViewModel() {
-        viewModel.saveData("Haneet", "28");
+       // viewModel.saveData("Haneet", "28");
         viewModel.dataMutationStateResponse.observe(this, { it ->
             if (it != null) {
 
