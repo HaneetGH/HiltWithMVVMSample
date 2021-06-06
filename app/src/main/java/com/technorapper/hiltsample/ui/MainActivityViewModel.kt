@@ -23,12 +23,11 @@ class MainActivityViewModel @Inject constructor(
     private val repository: MainActivityRepository
 ) : BaseViewModel() {
     val name: MutableLiveData<String> = MutableLiveData()
-    private val _dataState: MutableLiveData<DataState<Flow<String?>>> = MutableLiveData()
-    private val _dataQueryState: MutableLiveData<DataState<List<LaunchDetailsQuery.Post>?>> = MutableLiveData()
-    private val _dataMutationStateResponse: MutableLiveData<DataState<PostDetailsMutation.Insert_posts_one>> = MutableLiveData()
+    private val _dataQueryState: MutableLiveData<DataState<List<LaunchDetailsQuery.Post>?>> =
+        MutableLiveData()
+    private val _dataMutationStateResponse: MutableLiveData<DataState<PostDetailsMutation.Insert_posts_one>> =
+        MutableLiveData()
 
-    val dataState: MutableLiveData<DataState<Flow<String?>>>
-        get() = _dataState
 
     val dataQueryState: MutableLiveData<DataState<List<LaunchDetailsQuery.Post>?>>
         get() = _dataQueryState
@@ -43,38 +42,10 @@ class MainActivityViewModel @Inject constructor(
 
     }
 
-//     fun getName(): Flow<String?> {
-//
-//
-//        return repository.getName()
-//
-//    }
-//
-//    fun getAGE() {
-//
-//
-//        return repository.getAge()
-//
-//    }
 
     fun setStateEvent(mainStateEvent: MainStateEvent) {
         viewModelScope.launch {
             when (mainStateEvent) {
-                is MainStateEvent.GetNameEvent -> {
-                    repository.getIntentName()
-                        .onEach { dataState ->
-                            _dataState.value = dataState
-                        }
-                        .launchIn(viewModelScope)
-                }
-
-                is MainStateEvent.GetAgeEvent -> {
-                    repository.getIntentAGE()
-                        .onEach { dataState ->
-                            _dataState.value = dataState
-                        }
-                        .launchIn(viewModelScope)
-                }
                 is MainStateEvent.ExecutePostQuery -> {
                     repository.queryData(offset = mainStateEvent.offset)
                         .onEach { dataState ->

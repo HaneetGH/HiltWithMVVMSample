@@ -33,15 +33,8 @@ class MainActivityRepository @Inject constructor(
         }
     }
 
-    fun getName(): Flow<String?> {
-
-        return userPreferences.name
-    }
 
     suspend fun queryData(offset: Int): Flow<DataState<List<LaunchDetailsQuery.Post>?>> = flow {
-        // in your coroutine scope, call `ApolloClient.query(...).toDeferred().await()`
-        //   emit(DataState.Loading)
-
         emit(DataState.Loading)
         val response = try {
 
@@ -57,11 +50,7 @@ class MainActivityRepository @Inject constructor(
             // handle application errors
             return@flow
         }
-        // postData()
         emit(DataState.Success(launch))
-        // launch now contains a typesafe model of your data
-        // println("Launch site: ${launch[0].title}")
-        //postData()
     }
 
     suspend fun postData(
@@ -70,9 +59,6 @@ class MainActivityRepository @Inject constructor(
         type: String,
         videoUri: String
     ): Flow<DataState<PostDetailsMutation.Insert_posts_one>> = flow {
-        // in your coroutine scope, call `ApolloClient.query(...).toDeferred().await()`
-        //   emit(DataState.Loading)
-
 
         val response = try {
 
@@ -97,29 +83,8 @@ class MainActivityRepository @Inject constructor(
         }
         Log.e("posgt", launch.title)
         emit(DataState.Success(launch))
-        // launch now contains a typesafe model of your data
-        // println("Launch site: ${launch[0].title}")
 
-    }
 
-    suspend fun getIntentName(): Flow<DataState<Flow<String?>>> = flow {
-        emit(DataState.Loading)
-        delay(1000)
-        val networkBlogs = userPreferences.name
-        //apiHit()
-        emit(DataState.Success(networkBlogs))
-    }
-
-    suspend fun getIntentAGE(): Flow<DataState<Flow<String?>>> = flow {
-        emit(DataState.Loading)
-        delay(1000)
-        val networkBlogs = userPreferences.age
-        emit(DataState.Success(networkBlogs))
-    }
-
-    fun getAge(): Flow<String?> {
-
-        return userPreferences.age
     }
 
 

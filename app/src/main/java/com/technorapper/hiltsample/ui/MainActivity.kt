@@ -33,7 +33,6 @@ class MainActivity : BaseClass(), RecyclerViewClickListener {
 
 
     }
-
     override fun setBinding() {
         binding =
             DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -46,8 +45,10 @@ class MainActivity : BaseClass(), RecyclerViewClickListener {
 
             BottomUpDialogs.showAddDialog(this) {
                 if (it != null) {
-                    var request =
-                        it as RequestPost
+                    var request =  it as RequestPost
+                    if (it.title.isBlank())
+                        return@showAddDialog
+
                     viewModel.setStateEvent(
                         MainStateEvent.ExecutePostMutation(
                             request.description,
@@ -72,10 +73,8 @@ class MainActivity : BaseClass(), RecyclerViewClickListener {
     }
 
     override fun attachViewModel() {
-        viewModel.saveData("Haneet", "28");
         viewModel.dataMutationStateResponse.observe(this, { it ->
             if (it != null) {
-
                 when (it) {
                     is DataState.Success<PostDetailsMutation.Insert_posts_one> -> {
                         offset = 1
@@ -92,30 +91,7 @@ class MainActivity : BaseClass(), RecyclerViewClickListener {
             }
 
         })
-        // viewModel.setStateEvent(MainStateEvent.GetNameEvent)
-        //viewModel.setStateEvent(MainStateEvent.GetAgeEvent)
         viewModel.setStateEvent(MainStateEvent.ExecutePostQuery(offset))
-        viewModel.dataState.observe(this, { it ->
-            if (it != null) {
-
-                when (it) {
-                    is DataState.Success<Flow<String?>> -> {
-                        it.data.asLiveData().observe(this, { final ->
-                            if (final != null) {
-                                Log.d("DATA", final)
-                            }
-                        })
-                    }
-                    is DataState.Error -> {
-                        Log.d("DATA", "ERROR");
-                    }
-                    is DataState.Loading -> {
-                        Log.d("DATA", "LOADING");
-                    }
-                }
-            }
-
-        })
         viewModel.dataQueryState.observe(this, { it ->
             if (it != null) {
 
@@ -139,8 +115,6 @@ class MainActivity : BaseClass(), RecyclerViewClickListener {
             }
 
         })
-
-        //viewModel.name.observe(this, { Log.d("NAME", it) })
     }
 
     override fun onClick(v: View?, position: Int) {
