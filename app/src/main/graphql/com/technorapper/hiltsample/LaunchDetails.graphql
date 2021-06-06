@@ -1,5 +1,5 @@
-query LaunchDetails($lim:Int!,$off:Int!) {
-    posts(limit: $lim, offset: $off) {
+query LaunchDetails($lim:Int!,$off:Int!,$created_at: order_by = desc) {
+    posts(order_by: [{created_at: $created_at}],limit: $lim, offset: $off) {
         id
         title
         description
@@ -10,3 +10,4 @@ query LaunchDetails($lim:Int!,$off:Int!) {
 
     }
 }
+
