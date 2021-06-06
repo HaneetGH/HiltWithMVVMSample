@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.technorapper.hiltsample.LaunchDetailsQuery
+import com.technorapper.hiltsample.PostDetailsMutation
 import com.technorapper.hiltsample.base.BaseViewModel
 import com.technorapper.hiltsample.data.repository.MainActivityRepository
 import com.technorapper.hiltsample.domain.DataState
@@ -23,15 +24,17 @@ class MainActivityViewModel @Inject constructor(
 ) : BaseViewModel() {
     val name: MutableLiveData<String> = MutableLiveData()
     private val _dataState: MutableLiveData<DataState<Flow<String?>>> = MutableLiveData()
+    private val _dataQueryState: MutableLiveData<DataState<List<LaunchDetailsQuery.Post>?>> = MutableLiveData()
+    private val _dataMutationStateResponse: MutableLiveData<DataState<PostDetailsMutation.Insert_posts_one>> = MutableLiveData()
 
-    private val _dataQueryState: MutableLiveData<DataState<List<LaunchDetailsQuery.Post>?>> =
-        MutableLiveData()
     val dataState: MutableLiveData<DataState<Flow<String?>>>
         get() = _dataState
 
-
     val dataQueryState: MutableLiveData<DataState<List<LaunchDetailsQuery.Post>?>>
         get() = _dataQueryState
+
+    val dataMutationStateResponse: MutableLiveData<DataState<PostDetailsMutation.Insert_posts_one>>
+        get() = _dataMutationStateResponse
 
     fun saveData(s: String, s1: String) {
 
@@ -79,6 +82,18 @@ class MainActivityViewModel @Inject constructor(
                         }
                         .launchIn(viewModelScope)
                 }
+                is MainStateEvent.ExecutePostMutation -> {
+                    repository.postData(
+                        mainStateEvent.description,
+                        mainStateEvent.title,
+                        mainStateEvent.type,
+                        mainStateEvent.videoUri
+                    )
+                        .onEach { dataState ->
+                            dataMutationStateResponse.value = dataState
+                        }
+                        .launchIn(viewModelScope)
+                }
             }
         }
     }
@@ -90,6 +105,12 @@ sealed class MainStateEvent {
 
     object GetAgeEvent : MainStateEvent()
     data class ExecutePostQuery(var offset: Int) : MainStateEvent()
+    data class ExecutePostMutation(
+        var description: String,
+        var title: String,
+        var type: String,
+        var videoUri: String
+    ) : MainStateEvent()
 
     object None : MainStateEvent()
 }

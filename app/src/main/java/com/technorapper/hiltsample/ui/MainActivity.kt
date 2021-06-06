@@ -6,6 +6,7 @@ import androidx.activity.viewModels
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.asLiveData
 import com.technorapper.hiltsample.LaunchDetailsQuery
+import com.technorapper.hiltsample.PostDetailsMutation
 import com.technorapper.hiltsample.R
 import com.technorapper.hiltsample.base.BaseClass
 import com.technorapper.hiltsample.data.UserPreferences
@@ -20,17 +21,35 @@ import javax.inject.Inject
 
 class MainActivity : BaseClass() {
     private val viewModel by viewModels<MainActivityViewModel>()
-    var offset=1
+    var offset = 1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
 
         viewModel.saveData("Haneet", "28");
+        viewModel.dataMutationStateResponse.observe(this, { it ->
+            if (it != null) {
 
-        viewModel.setStateEvent(MainStateEvent.GetNameEvent)
-        viewModel.setStateEvent(MainStateEvent.GetAgeEvent)
+                when (it) {
+                    is DataState.Success<PostDetailsMutation.Insert_posts_one> -> {
+                        Log.d("DATA RES", it.data.toString());
+                    }
+                    is DataState.Error -> {
+                        Log.d("DATA  RES", "ERROR");
+                    }
+                    is DataState.Loading -> {
+                        Log.d("DATA  RES", "LOADING");
+                    }
+                }
+            }
+
+        })
+
+       // viewModel.setStateEvent(MainStateEvent.GetNameEvent)
+        //viewModel.setStateEvent(MainStateEvent.GetAgeEvent)
         viewModel.setStateEvent(MainStateEvent.ExecutePostQuery(offset))
+       viewModel.setStateEvent(MainStateEvent.ExecutePostMutation("haneetDes","haneetTitle","haneetType","haneetUri"))
         viewModel.dataState.observe(this, { it ->
             if (it != null) {
 
