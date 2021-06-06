@@ -1,16 +1,18 @@
 # HiltWithMVVM/MVI Sample
 
-MVI/MVVM
-GraphQL
-ApolloClinet
-Hilt
-DataStore
+MVI/MVVM<br />
+GraphQL<br />
+ApolloClinet<br />
+Hilt<br />
+DataStore<br />
+<br />
+<br />
+<br />
 
-
-Pending
-UI
-Caching
-code cleanup
+Pending<br />
+UI<br />
+Caching<br />
+code cleanup<br />
 
 
 
