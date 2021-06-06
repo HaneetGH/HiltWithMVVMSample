@@ -1,6 +1,5 @@
 # HiltWithMVVM/MVI Sample.  
 
-![GitHub Actions status | HaneetGH/HiltWithMVVMSample](https://github.com/HaneetGH/HiltWithMVVMSample/workflows/CI/badge.svg)
 
 1. MVI/MVVM<br />
 2. GraphQL<br />
